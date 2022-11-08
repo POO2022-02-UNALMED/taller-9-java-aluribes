@@ -18,6 +18,7 @@ public class Calculator extends VBox implements EventHandler<ActionEvent>{
 	String number2 = "";
 	String operator;
 	Text displayText;
+	boolean band = false;
 	
 	public Calculator(){
 		super(10);
@@ -43,82 +44,82 @@ public class Calculator extends VBox implements EventHandler<ActionEvent>{
 		gd.add(b7, 0, 0);
 		b7.setPrefWidth(50);
 		b7.setOnAction(this);
-		
+
 		Button b8 = new Button("8");
 		gd.add(b8, 1, 0);
 		b8.setPrefWidth(50);
 		b8.setOnAction(this);
-		
+
 		Button b9 = new Button("9");
 		gd.add(b9, 2, 0);
 		b9.setPrefWidth(50);
 		b9.setOnAction(this);
-		
+
 		Button div = new Button("/");
 		gd.add(div, 3, 0);
 		div.setPrefWidth(50);
 		div.setOnAction(this);
-		
+
 		Button b4 = new Button("4");
 		gd.add(b4, 0, 1);
 		b4.setPrefWidth(50);
 		b4.setOnAction(this);
-		
+
 		Button b5 = new Button("5");
 		gd.add(b5, 1, 1);
 		b5.setPrefWidth(50);
 		b5.setOnAction(this);
-		
+
 		Button b6 = new Button("6");
 		gd.add(b6, 2, 1);
 		b6.setPrefWidth(50);
 		b6.setOnAction(this);
-		
+
 		Button mul = new Button("*");
 		gd.add(mul, 3, 1);
 		mul.setPrefWidth(50);
 		mul.setOnAction(this);
-		
+
 		Button b1 = new Button("1");
 		gd.add(b1, 0, 2);
 		b1.setPrefWidth(50);
 		b1.setOnAction(this);
-		
+
 		Button b2 = new Button("2");
-		gd.add(b2, 2, 2);
+		gd.add(b2, 1, 2);
 		b2.setPrefWidth(50);
 		b2.setOnAction(this);
-		
+
 		Button b3 = new Button("3");
 		gd.add(b3, 2, 2);
 		b3.setPrefWidth(50);
 		b3.setOnAction(this);
-		
+
 		Button minus = new Button("-");
 		gd.add(minus, 3, 2);
 		minus.setPrefWidth(50);
 		minus.setOnAction(this);
-		
+
 		Button b0 = new Button("0");
 		gd.add(b0, 0, 3, 2, 1);
 		b0.setPrefWidth(105);
 		b0.setOnAction(this);
-		
+
 		Button plus = new Button("+");
 		gd.add(plus, 2, 3);
 		plus.setPrefWidth(50);
 		plus.setOnAction(this);
-		
+
 		Button equals = new Button("=");
 		gd.add(equals, 3, 3);
 		equals.setPrefWidth(50);
 		equals.setOnAction(this);
-		
+
 		Button reset = new Button("C");
 		gd.add(reset, 0, 4, 4, 1);
 		reset.setPrefWidth(215);
 		reset.setOnAction(this);
-		
+
 		this.getChildren().addAll(sp, gd);
 	}
 
@@ -128,32 +129,47 @@ public class Calculator extends VBox implements EventHandler<ActionEvent>{
 		Button b = (Button) event.getSource();
 		String value = b.getText();
 		
-		if (value.equals("=")){
-			switch (operator) {
-				case "/" -> displayText.setText(Double.toString((double) Integer.parseInt(number1) / Integer.parseInt(number2)));
-				case "*" -> displayText.setText(Double.toString(Integer.parseInt(number1) * Integer.parseInt(number2)));
-				case "-" -> displayText.setText(Double.toString(Integer.parseInt(number1) - Integer.parseInt(number2)));
-				case "+" -> displayText.setText(Double.toString(Integer.parseInt(number1) + Integer.parseInt(number2)));
+		if(value.equals("C")) {
+			
+			this.displayText.setText(""); // Se elimina el texto en pantalla
+			
+		}else if(value.equals("=")) {
+			
+			float numero1 = Float.parseFloat(number1);
+			float numero2 = Float.parseFloat(this.displayText.getText());
+			
+			if(operator.equals("+")) {
+				this.displayText.setText(Float.toString(numero1+numero2)); // Suma ambos números
 			}
-
-		}
-		else if (value.equals("C")){
-			number1="";
-			number2="";
-			operator="";
-			displayText.setText("");
-		}
-		else{
-			if (value.equals("/") || value.equals("*") || value.equals("-") || value.equals("+")) {
-				displayText.setText(operator = value);
-				return;
+			
+			if(operator.equals("*")) {
+				this.displayText.setText(Float.toString(numero1*numero2)); // Multiplica ambos números
 			}
-			if (!operator.isEmpty()) {
-				displayText.setText(number2 += value);
-			} else {
-				displayText.setText(number1 += value);
+			
+			if(operator.equals("-")) {
+				this.displayText.setText(Float.toString(numero1-numero2)); // Resta ambos números
 			}
-		
+			
+			if(operator.equals("/")) {
+				this.displayText.setText(Float.toString(numero1/numero2)); // Divide ambos números
+			}
+			
+			band=true;
+			
+		} else if(value.equals("+") || value.equals("-") || value.equals("*") || value.equals("/")) {
+			
+			operator=value;
+			number1=this.displayText.getText();
+			this.displayText.setText("");
+			
+		}else {
+			if(band) {
+				
+				this.displayText.setText("");
+				band=false;
+			}
+			
+			this.displayText.setText(this.displayText.getText()+value);
 		}
 	
 	}
